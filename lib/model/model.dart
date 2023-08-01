@@ -1,24 +1,24 @@
 
 class Model {
-    String name;
-    String address;
+     String? name;
+    String? address;
     int? id;
 
     Model({
-        required this.name,
-        required this.address,
-       this.id,
+        this.id,
+        this.name,
+         this.address,
     });
 
     factory Model.fromJson(Map<String, dynamic> json) => Model(
+        id: json["id"],
         name: json["name"],
         address: json["address"],
-        id: json["id"],
     );
 
     Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "address": address,
-        "id": id,
     };
 }

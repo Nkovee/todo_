@@ -21,35 +21,51 @@ class DataBaseHelper {
      CREATE TABLE todos(
       name TEXT,
       address TEXT,
-      id INTEGGER PRIMARY KEY
+      id INTEGGER PRIMARY KEY AUTOINCREMENT
       )
 
       """);
   }
 
   Future<int> addUsers(Model model) async {
-    Database db = await instance.dataBase;
-    return await db.insert("todos", model.toJson());
+    try {
+      Database db = await instance.dataBase;
+      return await db.insert("todos", model.toJson());
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<List<Model>> gettodos() async {
-    Database db = await instance.dataBase;
-    var todos = await db.query("todos", orderBy: "id");
-    // ignore: no_leading_underscores_for_local_identifiers
-    List<Model> _todos = todos.isNotEmpty
-        ? todos.map((model) => Model.fromJson(model)).toList()
-        : [];
-    return _todos;
+    try {
+      Database db = await instance.dataBase;
+      var todos = await db.query("todos", orderBy: "id");
+      // ignore: no_leading_underscores_for_local_identifiers
+      List<Model> _todos = todos.isNotEmpty
+          ? todos.map((model) => Model.fromJson(model)).toList()
+          : [];
+      return _todos;
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  Future deleteUser(int? id) async {
-    Database db = await instance.dataBase;
-    return await db.delete("todos", where: 'id=?', whereArgs: [id]);
+  Future<int> deleteUser(int? id) async {
+    try {
+      Database db = await instance.dataBase;
+      return await db.delete("todos", where: 'id=?', whereArgs: [id]);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future upDateUser(Model model) async {
-    Database db = await instance.dataBase;
-    return await db
-        .update("todos", model.toJson(), where: 'id==?', whereArgs: [model.id]);
+    try {
+      Database db = await instance.dataBase;
+      return await db.update("todos", model.toJson(),
+          where: 'id==?', whereArgs: [model.id]);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

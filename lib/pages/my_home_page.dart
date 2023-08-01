@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/model/model.dart';
+import 'package:flutter_application_2/pages/edit_page.dart';
 import 'package:flutter_application_2/pages/user_page.dart';
 import 'package:flutter_application_2/services/data_base.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,20 +60,44 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     ref.read(futureProviderData);
                     return Card(
                       child: ListTile(
-                        trailing: IconButton(
-                            onPressed: () async {
-                              await DataBaseHelper.instance
-                                  .deleteUser(todoList[index].id);
-                             final r= ref.refresh(futureProviderData);
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              size: 20,
-                              color: Colors.red,
-                            )),
-                        title: Text(todoList[index].name),
+                        trailing: SizedBox(
+                          width: 50,
+                          child: Row(
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => EditPage(
+                                                Model(
+                                                    name: todoList[index].name,
+                                                    address: todoList[index]
+                                                        .address))));
+                                  },
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
+                                  )),
+                              InkWell(
+                                  onTap: () async {
+                                    await DataBaseHelper.instance
+                                        .deleteUser(todoList[index].id);
+                                    // ignore: unused_local_variable
+                                    final re = ref.refresh(futureProviderData);
+                                  },
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ))
+                            ],
+                          ),
+                        ),
+                        title: Text(
+                          todoList[index].name.toString(),
+                        ),
                         subtitle: Text(
-                          todoList[index].address,
+                          todoList[index].address.toString(),
                         ),
                       ),
                     );

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,23 +9,32 @@ import 'package:flutter_application_2/services/data_base.dart';
 import 'package:flutter_application_2/widgets/textfromfield.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserPage extends ConsumerStatefulWidget {
-  const UserPage({super.key});
+class EditPage extends ConsumerStatefulWidget {
+  final Model model;
+  const EditPage(this.model, {super.key});
 
   @override
-  ConsumerState<UserPage> createState() => _UserPageState();
+  ConsumerState<EditPage> createState() => _EditPageState();
 }
 
 final GlobalKey<FormState> fromkey = GlobalKey<FormState>();
 final TextEditingController namecontroller = TextEditingController();
 final TextEditingController addresscontroller = TextEditingController();
-class _UserPageState extends ConsumerState<UserPage> {
+
+class _EditPageState extends ConsumerState<EditPage> {
+  @override
+  void initState() {
+    super.initState();
+    namecontroller.text = widget.model.name ?? "";
+    addresscontroller.text = widget.model.address ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text("User Page"),
+        title: const Text("Edit Page"),
         centerTitle: true,
       ),
       body: Form(
@@ -59,14 +70,13 @@ class _UserPageState extends ConsumerState<UserPage> {
             ElevatedButton(
               onPressed: () async {
                 if (fromkey.currentState!.validate() == true) {
-                  await DataBaseHelper.instance.addUsers(Model(
-                      name: namecontroller.text,
-                      address: addresscontroller.text,
-                      ),
-                      );
-                      
-                  // ignore: unused_local_variable
-                  final refresh =ref.refresh(futureProviderData);
+                  final Model model = Model(
+                    id: widget.model.id,
+                    name: namecontroller.text,
+                    address: addresscontroller.text,
+                  );
+                  await DataBaseHelper.instance.upDateUser(model);
+                  final refresh = ref.refresh(futureProviderData);
                   Navigator.pop(context);
                   print("data");
                 } else {
